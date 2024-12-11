@@ -1,0 +1,188 @@
+Hassan Shahid
+
+Q1/Write a complete C++ program that does the following:
+• performs 2 arithmetic operations: an addition & a subtraction. Each of this 
+arithmetic needs to be done using a function.
+• receives user input of 2 integer values
+• gives an option to the user to perform either of the arithmetic
+• gives an option to the user to continually perform either of the arithmetic operation 
+until "N" or "n" is given 
+
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+//Functions prototypes for subraction and addition 
+int subtraction(int num1,int num2);
+int addition(int num1,int num2);
+
+int main() {
+
+int num1, num2, add, sub, decide, process; 
+char response;   
+
+//loops until the cont value is equal to 0  
+ while (process == 0){ 
+
+// Take user input for two integer values    
+  cout << "Enter number 1: ";
+   cin >> num1;
+
+  cout << "Enter number 2: ";
+   cin >> num2;    
+
+// Take user input for arthemetic operation    
+  cout << "Which arithmetic you want to perform? type 1 for Addition, type 2 for Subtraction and for both type 3 ? : "; 
+
+// Validate if the user entered a correct value    
+int count = 0;
+while (decide > 3 || decide <= 0) {
+    if (count == 10) { // Gives user 10 tries to enter correct value
+      cout << "Program terminated due to invalid inputs";
+        return 0;
+    }
+    if (count > 0) {
+        cout << "Invalid input, Please enter correct option: " << endl;
+    }
+    cin >> decide ;
+    count++;
+    cout << endl;
+}
+   
+// Perform arthemetic operation based on user's input   
+ if (decide == 1){    
+ add = addition(num1, num2);
+   cout << "The addition of these numbers is: " << add << endl;  
+}   
+ else if( decide == 2){
+   sub = subtraction(num1, num2);
+   cout << "The subtraction of these numbers is: " << sub << endl; 
+ }  
+ else {
+     add = addition(num1, num2);
+     cout << "The addition of these numbers is: " << add << endl; 
+     sub = subtraction(num1, num2);
+     cout << "The subtraction of these numbers is: " << sub << endl;
+ }  
+
+// Take user input to continue or stop the program    
+ cout << "Do you want to carry on? Type any key to continue or Type N to stop : "<< endl;
+ cin >> response; 
+ cout << endl;
+  
+//Validate the user reponse and terminate if matched 
+ if ( response == 'n' || response == 'N'){ 
+   process = 0;
+   cout << "Program terminated"; 
+   return 0; 
+   }
+   
+ }// End of loop
+  
+} // End of main 
+
+//Function to perform subtraction 
+int subtraction(int num1,int num2){
+
+  int sub;
+  sub = num1 - num2;
+  return sub;
+}
+
+// Function to perform addition 
+int addition(int num1,int num2){
+
+  int add;
+  add = num1 +num2;
+  return add; 
+}
+
+
+
+
+Q2/ Write a complete C++ array to create an array that can hold ten integer values and get input from the user. 
+Create separate functions to do the following:
+• Display those values on the screen in its original and reverse orders.
+• Compare the values in the array to determine the largest and smallest numbers.
+
+
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+// Function to print the values in original and reverse order
+void posi_arr (int arr1[10]);
+
+// Function to find the largest value in the array
+int largest(int arr1[10]);
+
+// Function to find the smallest value in the array
+int smallest(int arr1[10]);
+
+int main() {
+
+int arr1[10];
+
+// Taking input of 10 integer values from user  
+  for(int i=0; i <10; i++){
+    cout << "Enter the " << i << " position value: ";
+    cin >> arr1[i];}
+  
+  cout << endl;
+  
+  // Calling the function to print the values in original and reverse order
+  posi_arr(arr1);
+  
+  cout << endl << endl;
+
+  // Calling the function to find the largest value in the array
+  int large = largest(arr1);
+  cout << "The largest value is: "<< large << endl; 
+
+  // Calling the function to find the smallest value in the array
+  int small = smallest(arr1);
+  cout << "The smallest value is: "<< small << endl; 
+  
+} // end of main
+
+// Function to print the values in original and reverse order
+void posi_arr(int arr1[10]) {
+  
+cout << "Values in orginal positions: ";
+  for (int i=0; i<10; i++) // This loop prints values in orignal order
+    cout << arr1[i] << " ";
+  cout << endl;
+ 
+cout << "Values in reverse orders: "; 
+  for (int i=9; i>=0; i--) //This loop prints values in reverse order
+    cout << arr1[i] << " ";
+} 
+
+// Function to find the largest value in the array 
+int largest(int arr1[10]){
+
+  int largest = arr1[0];  
+
+  for(int i=0; i<10; i++)
+    //Compare the value in largest with the next value
+    if (arr1[i] > largest){ 
+     largest = arr1[i]; 
+    }
+  return largest;
+  }
+
+
+// Function to find the smallest value in the array
+int smallest(int arr1[10]){
+
+  int smallest = arr1[0];
+  //Compare the value in smallest with the next value
+  for(int i=0; i<10; i++)
+    if (arr1[i] < smallest){
+     smallest = arr1[i]; 
+    }
+  return smallest;
+}
+
