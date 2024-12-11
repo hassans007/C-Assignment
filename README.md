@@ -94,20 +94,6 @@ The program includes the following functions:
 4. **Inventory Update**:  
    - The program updates the `bookslist.txt` file when a user buys a book or when an admin adds new books to the system.
 
-## How to Compile and Run
-
-1. **Compile**:  
-   - Use a C++ compiler to compile the program. Example:  
-     `g++ book_management.cpp -o book_management`
-   
-2. **Run**:  
-   - After compiling, run the program:  
-     `./book_management`
-
-## License
-
-This program is for educational purposes and can be modified and extended to fit specific needs.
-
 ## Author
 
 Made by: **Hassan Shahid**
