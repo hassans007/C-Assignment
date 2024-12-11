@@ -1,0 +1,430 @@
+
+/*
+System 1: Book Management System
+A Book Management System maintains the inventory of books sold at a bookstore or a 
+library. The detail of a book includes author, title, author, publisher and price. A 
+shopkeeper, librarian or library user for example, should be able to perform the following 
+functions:
+1. Input the title and/or author of the book, and the system searches the book list and 
+displays the book information. If the book is not available, appropriate message is 
+displayed. It the book is available, the system displays the book details, book 
+availability or cost of the book. 
+2. Update the inventory list of books. Whenever new books are added to the store or 
+library, the inventory list can be updated with the required details including the book 
+title, author, publisher and number of copies.
+Some functionalities (e.g., number 2) should only be for administrator users like a 
+shopkeeper or a librarian
+*/
+
+
+/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////CODE STARTS FROM HERE /////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
+#include <iostream>
+using namespace std;
+#include <cmath>
+#include <fstream>
+#include <string>
+#include <vector>
+
+struct Book {
+  string name;
+  string author;
+  string publisher;
+  string available;
+  string cost;
+  int copies;
+};
+void Search(Book books[]);
+void Update(vector<Book> &inventory);
+void Logincheck();
+void Display(Book book);
+
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////MAIN////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+int main() {
+
+  // Declare an array of Book objects
+  Book books[10];
+
+  // Initializing book array
+  // Update the first book's properties
+  books[0] = {"Quantum Physics", "Maaz", "Hassan", "Yes", "19.99 $", 2};
+  books[1] = {"To Kill a Mockingbird", "Harper Lee", "Lippincott", "Yes", "10.99 $", 3};
+  books[2] = {"1984", "George Orwell", "Warburg", "No", "9.99 $", 5};
+  books[3] = {"The Great Gatsby","F. Scott Fitzgerald","Charles Scribner's Sons","Yes","12.99 $",4};
+  books[4] = {"The Catcher in the Rye","JD Salinger","Little, Brown and Company","No","8.99 $",9};
+  books[5] = {"To the Lighthouse", "Virginia Woolf","The Hogarth Press", "Yes","11.99 $", 6};
+  
+
+  // Display a welcome message
+  cout << "Welcome to Hassan's Book Shop" << endl;
+  cout << endl;
+
+  // Use a while loop to display a menu of options until the user chooses to exit
+  while (true) {
+    cout << "1 for Search Book / Author." << endl;
+    cout << "2 for Updating the Inventory (ADMIN ONLY)" << endl;
+    cout << "3 for Display All Books Available" << endl;
+    cout << "4 for Exit" << endl;
+    cout << "Enter: ";
+
+    // Get user input for the option they want to choose
+    int opt;
+    cin >> opt;
+
+    // Use if-else statements to perform the appropriate action based on the user's choice
+    if (opt == 1) {
+      // Call the Search() function to search for a book by title or author
+      Search(books);
+    }
+
+    else if (opt == 2) {
+      // Call the Logincheck() function to check if the user is authorized to update the inventory
+      Logincheck();
+    }
+
+    else if (opt == 3) {
+      // Use a for loop to display all the books' properties
+      for (int i = 0; i < 6; i++) {
+        Display(books[i]);
+      }
+    }
+
+    else if (opt == 4) {
+      // Display a goodbye message and exit the program
+      cout << "GOODBYE, See you!" << endl;
+      return 0;
+    } else {
+      // Display an error message if the user enters an invalid option
+      cout << "Wrong Input!, Please try again" << endl;
+    }
+  } // while loop
+}
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////SEARCH//////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+void Search(Book books[]) {
+
+  // Opening file for writing
+  ofstream write_obj("bookslist.txt", ios::app);
+
+  // Checking if it is opened successfully
+  if (!write_obj.is_open()) {
+    cerr << "Error: could not open file." << endl;
+    return;
+  }
+
+  // Writing to the file
+  write_obj << "File opened successfully." << endl;
+
+  // Declaring variables
+  char res1, res2, res3; // for user response
+  string detail;         // to store book or author name input
+
+  // Initializing control variables
+  bool cont1 = true; // to control middle loop
+  int prog = 0;      // to control outer loop
+
+  // Main loop for searching the books
+  while (prog == 0) {
+
+    // Middle loop to repeat input if user did not enter anything
+    while (cont1) {
+
+      // Prompting user to enter book or author name, or 'exit' to quit
+      cout << endl
+           << "\nEnter book's name or author's name\n"
+           << "(or 'exit' to quit): " << endl;
+
+ 
+      // Add cin.ignore() here
+      cin.ignore();
+        
+      getline(cin, detail);
+      
+      // Exiting the program if user enters 'exit'
+      if (detail == "exit") {
+        cout << "Program terminated." << endl;
+        return;
+      }
+
+      // Looping through book array to find a match for the user's input
+      bool found = false;
+      for (int i = 0; i < 6; i++) {
+
+        if (detail == books[i].name || detail == books[i].author) {
+          found = true;
+          cout << endl
+               << "Are you looking for this book? " << books[i].name << " by "
+               << books[i].author << endl;
+
+          // Prompting user to confirm if this is the book they are looking for
+          cout << endl << "Type Y for Yes and Type N for No." << endl;
+          cin >> res1;
+
+          // Checking if the book is available
+          if (books[i].available == "No") {
+            cout << "This book is not available right now." << endl;
+            break;
+          }
+
+          // Checking if this the book the user wants
+          if (res1 == 'Y' || res1 == 'y') {
+            cout << endl << "These are the details of the book:" << endl;
+            cout << "Title: " << books[i].name << endl;
+            cout << "Author: " << books[i].author << endl;
+            cout << "Publisher: " << books[i].publisher << endl;
+            cout << "Available: " << books[i].available << endl;
+            cout << "Cost: " << books[i].cost << endl;
+            cout << "Copies available: " << books[i].copies << endl;
+
+            // Prompting user to confirm if they want to buy this book
+            cout << endl << "Do you want to buy it ? Y or N: " << endl;
+            cin >> res2;
+
+            // Checking whether the user bought it
+            if (res2 == 'Y' || res2 == 'y') {
+
+              // Decreasing the number of copies available
+              books[i].copies--;
+
+              // Writing the borrowed book to the file
+              write_obj << endl
+                        << "Book bought: " << books[i].name << " by "
+                        << books[i].author;
+              write_obj << endl << "Copies left: " << books[i].copies <<
+              endl;
+              
+              // Updating the file with the new number of copies available
+              ofstream update_obj("bookslist.txt", ios::app);
+              for (int j = 0; j < 6; j++) {
+                update_obj << books[j].name << "," << books[j].author << ","
+                           << books[j].publisher << "," << books[j].available
+                           << "," << books[j].cost << "," << books[j].copies
+                           << endl;
+              }
+              update_obj.close();
+
+              // Displaying a message to the user
+              cout << "You have successfully bought the book. Enjoy reading!"
+                   << endl << endl;
+              cout << "Moving back to Home Page ...." << endl << endl;
+
+              // Exiting the program
+              return;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+
+      // Displaying an error message if no match is found
+      if (!found) {
+        cout << "Sorry, no book found. Please try again." << endl;
+        cont1 = false;
+        continue;
+        
+      } else {
+        cont1 = false;
+      }
+    }
+
+    // Prompting user to search again or exit
+    cout << endl << "Do you want to search for another book? Y or N: " <<
+    endl;
+    cin >> res3;
+
+    // Checking user's response
+    if (res3 == 'N' || res3 == 'n') {
+      cout << "Program terminated." << endl;
+      return;
+    } else {
+      cont1 = true;
+      continue;
+    }
+  }
+}
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////UPDATE///////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+void Update(vector<Book> &inventory) {
+
+  // Declare variables to store input
+  string name, author, publisher;
+  int cost;
+  int copies;
+  char res;
+
+  // Open a file for writing inventory updates
+  ofstream file_up("bookslist.txt", ios::app);
+
+  // Display a welcome message
+  cout << endl << "Welcome to the Inventory" << endl << endl;
+
+  // Display a message for adding a new book
+  cout << endl << "To Add a New Book " << endl << endl;
+
+  // Write a message to the inventory update file
+  file_up << "File open successfully for Updating";
+
+  // Loop to allow adding multiple books at once
+  do {
+
+    // Create a new Book object and set its properties
+    Book new_book;
+
+    // Get input for the new book
+    cout << "Enter the book name: ";
+    cin.ignore(); // clear input buffer before getting input
+    getline(cin, name);
+
+    cout << "Enter the author's name: ";
+    getline(cin, author);
+
+    cout << "Enter the publisher's name: ";
+    getline(cin, publisher);
+
+    cout << "Enter the cost: ";
+    cin >> new_book.cost;
+
+    cout << "Enter the number of copies: ";
+    cin >> copies;
+
+    // Set the properties of the new book object
+    new_book.name = name;
+    new_book.author = author;
+    new_book.publisher = publisher;
+    new_book.copies = copies;
+
+    cout << endl << endl << "These are the details of the New Book" << endl << endl;
+
+    // Print the book details for confirmation
+    cout << "Name: " << new_book.name << endl;
+    cout << "Author: " << new_book.author << endl;
+    cout << "Publisher: " << new_book.publisher << endl;
+    cout << "Cost: " << new_book.cost << endl;
+    cout << "Copies: " << new_book.copies << endl << endl;
+
+    
+    // Add the new book to the inventory vector
+    inventory.push_back(new_book);
+
+    // Write inventory to file and exit loop
+    file_up << endl << "Name: " << new_book.name << endl
+            << "Author: " << new_book.author << endl
+            << "Publisher: " << new_book.publisher << endl
+            << "Cost: " << new_book.cost << endl
+            << "Copies: " << new_book.copies << endl
+            << endl;
+    
+    // Print confirmation message and ask if user wants to add more books
+    cout << "Book added to inventory." << endl;
+    cout << "Do you want to add another book? (Y/N) " << endl;
+    cin >> res;
+   
+  } while (res == 'Y' || res == 'y');
+
+  // Close the inventory update file
+  file_up.close();
+
+  // Print a message to confirm that the inventory has been updated and written to file
+  cout << "Inventory updated and written to file." << endl;
+  cout << endl;
+  cout << "Moving back to Home Page ...." << endl << endl;
+  main();
+  return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////LOGINCHECK//////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+void Logincheck() {
+
+  // Initialize variables
+  int ID = 0, Pass = 0, IdE,
+      PassE; // ID and Password for the Admin and User,and ID and Password
+             // entered by the user during login
+
+  int wrong = 0;     // Flag variable for checking if login was successful
+  int incorrect = 0; // Counter for number of incorrect login attempts
+  bool log = false;
+  char res;
+
+  cout << "ADMIN ACCESS ONLY!" << endl;
+
+  cout << endl << "Do you wish to continue? Y or N: " << endl;
+  cin >> res;
+
+  if (res == 'N' || res == 'n') {
+    cout << endl << "Moving to Home Page..." << endl << endl;
+    return;
+  }
+
+  while (wrong == 0) { // Keep looping until the user has successfully logged in
+
+    // Prompt user to enter their ID and Password for login
+    while (IdE != ID || PassE != Pass) {
+      ID = 2335;
+      Pass = 1122;
+
+      cout << endl << "Enter your ID: ";
+      cin >> IdE;
+      cout << endl << "Enter your Password: ";
+      cin >> PassE;
+
+      if (IdE != ID || PassE != Pass) { // If the user input is incorrect,
+                                        // display an error message
+        if (incorrect < 5) {
+          cout << "Incorrect Id or Password,Please enter again " << endl;
+        } else if (incorrect >= 5) { // If the user input is still incorrect
+                                     // after5 attempts, terminate the program
+          cout << endl << "Too many Incorrect tries!" << endl;
+          cout << "Program Terminated";
+          return;
+        }
+      } else { // If the user input is correct, display a success message and
+               // set the flag to indicate successful login.
+        cout << endl << "YOU HAVE SUCCESSFULLY LOGGED IN!" << endl << endl;
+
+        vector<Book> inventory;
+        Update(inventory); // Update function Call when the user has logged IN
+      }
+      incorrect++;
+    } // end of while
+  }   // end of main while
+} // end of function
+
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////////////DISPLAY////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+void Display(Book book) { // Displays All the Books available 
+  cout << "Name: " << book.name << endl;
+  cout << "Author: " << book.author << endl;
+  cout << "Publisher: " << book.publisher << endl;
+  cout << "Available: " << book.available << endl;
+  cout << "Cost: " << book.cost << endl;
+  cout << "Copies: " << book.copies << endl;
+  cout << endl;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////MADE BY HASSAN SHAHID//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
